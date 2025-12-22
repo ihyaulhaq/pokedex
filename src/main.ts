@@ -1,7 +1,10 @@
+import { getCommands } from "./commands.js"
 import {startREPL} from "./repl.js"
+import { initState } from "./state.js";
 
-function main() {
-  startREPL()
+async function main() {  
+  const state = initState();  
+  await startREPL(state)
 }
 
 main()
