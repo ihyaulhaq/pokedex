@@ -5,19 +5,18 @@ export async function commandCatchPoke(state: State, ...args: string[]) {
     throw new Error("you must provide a the name");
   }
   const name = args[0]
-  const poke = await state.pokeAPI.fecthPokemon(name)
-  const catchChance = poke.base_experience
+  const pokemon = await state.pokeAPI.fecthPokemon(name)
+  const catchChance = pokemon.base_experience
   const randomChance = Math.random() * 700
 
   console.log(`Throwing a Pokeball at ${name}...`)
 
   if (randomChance < catchChance) {
-    console.log(`${name} escaped!`)
-    console.log(`${poke.base_experience} \n ${randomChance}`)
+    console.log(`${name} escaped!`)    
     return
   }
-  console.log(`${name}was caught!`)
-  console.log(`${poke.base_experience} \n ${randomChance}`)
-
+  console.log(`${name} was caught!`)
+  console.log("You may now inspect it with the inspect command.");  
+  state.ownedPokemon[pokemon.name] = pokemon
 }
 

@@ -1,7 +1,5 @@
 import { Cache } from "./pokecache.js";
 
-
-
 export class PokeAPI {
   private static readonly baseURL = "https://pokeapi.co/api/v2";
   private cache: Cache;
@@ -16,8 +14,7 @@ export class PokeAPI {
   async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
     const url = pageURL || `${PokeAPI.baseURL}/location-area`;
     const cached = this.cache.get<ShallowLocations>(url)
-    if (cached) {
-      console.log("found the cache")
+    if (cached) {      
       return cached
     }
     try {
@@ -29,8 +26,7 @@ export class PokeAPI {
         );
       }
 
-      const locations: ShallowLocations = await response.json();
-      console.log("adding the cache")
+      const locations: ShallowLocations = await response.json();      
       this.cache.add(url, locations)
       return locations;
     } catch (error) {
@@ -42,8 +38,7 @@ export class PokeAPI {
     const url = `${PokeAPI.baseURL}/location-area/${locationName}`;
     const cached = this.cache.get<LocationDetail>(url)
 
-    if (cached) {
-      console.log("found the cache")
+    if (cached) {      
       return cached
     }
     try {
@@ -52,8 +47,7 @@ export class PokeAPI {
 
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
-      }
-      console.log("adding the cache")
+      }      
       const locationDetail: LocationDetail = await response.json();
       this.cache.add(url, locationDetail)
 
@@ -68,8 +62,7 @@ export class PokeAPI {
     const url = `${PokeAPI.baseURL}/pokemon/${pokemonName}`;
     const cached = this.cache.get<PokemonDetail>(url)
 
-    if (cached) {
-      console.log("found the cache")
+    if (cached) {      
       return cached
     }
     try {
@@ -78,15 +71,12 @@ export class PokeAPI {
 
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
-      }
-      console.log("adding the cache")
+      }      
       const pokemonDetail: PokemonDetail = await response.json();
       this.cache.add(url, pokemonDetail)
-
       return pokemonDetail;
-
     } catch (error) {
-      throw new Error(`Error fetching locations: ${(error as Error).message}`);
+      throw new Error(`Error fetching pokemon : ${(error as Error).message}`);
     }
   }
   
