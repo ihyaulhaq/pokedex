@@ -38,9 +38,10 @@ export class PokeAPI {
     }
   }
 
-  async fetchLocation(locationName: string): Promise<Location> {
+  async fetchLocation(locationName: string): Promise<LocationDetail> {
     const url = `${PokeAPI.baseURL}/location-area/${locationName}`;
-    const cached = this.cache.get<Location>(url)
+    const cached = this.cache.get<LocationDetail>(url)
+
     if (cached) {
       console.log("found the cache")
       return cached
@@ -53,8 +54,11 @@ export class PokeAPI {
         throw new Error(`Response status: ${response.status}`);
       }
       console.log("adding the cache")
-      this.cache.add(url, response.json())
-      return response.json();
+      const locationDetail: LocationDetail = await response.json();
+      this.cache.add(url, locationDetail)
+
+      return locationDetail;
+
     } catch (error) {
       throw new Error(`Error fetching locations: ${(error as Error).message}`);
     }
