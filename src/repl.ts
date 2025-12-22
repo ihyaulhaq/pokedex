@@ -1,29 +1,36 @@
 import { State } from "./state.js";
 
 export function cleanInput(input: string): string[] {
-  return input.toLowerCase().trim().split(/\s+/);
+  return input
+    .toLowerCase()
+    .trim()
+    .split(" ")
+    .filter((word) => word !== "");
 }
 
 export async function startREPL(state: State) {
-  const { rl, commands } = state;
+  const {
+    readLine,
+    commands
+  } = state;
 
-  rl.prompt();
+  readLine.prompt();
 
-  rl.on("line", async (line) => {
-    const input = cleanInput(line);
+  readLine.on("line", async (line) => {
+    const cleanWord = cleanInput(line);
 
-    if (input.length === 0) {
-      rl.prompt();
+    if (cleanWord.length === 0) {
+      readLine.prompt();
       return;
     }
 
-    const [commandName] = input;
+    const commandName = cleanWord[0];
 
     const command = commands[commandName];
 
     if (!command) {
       console.log(`Unknown command: ${commandName}`);
-      rl.prompt();
+      readLine.prompt();
       return;
     }
     try {
@@ -31,6 +38,6 @@ export async function startREPL(state: State) {
     } catch (e) {
       console.log((e as Error).message);
     }
-    rl.prompt();
+    readLine.prompt();
   });
 }
